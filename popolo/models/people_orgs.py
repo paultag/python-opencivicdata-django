@@ -2,8 +2,6 @@ import datetime
 from django.db import models, transaction
 from django.db.models import Q, QuerySet
 from .base import OCDBase, LinkBase, OCDIDField, RelatedBase, IdentifierBase
-from .division import Division
-from .jurisdiction import Jurisdiction
 from .. import common
 
 # abstract models
@@ -41,7 +39,6 @@ class Organization(OCDBase):
     name = models.CharField(max_length=300)
     image = models.URLField(blank=True, max_length=2000)
     parent = models.ForeignKey('self', related_name='children', null=True)
-    jurisdiction = models.ForeignKey(Jurisdiction, related_name='organizations', null=True)
     classification = models.CharField(max_length=100, blank=True,
                                       choices=common.ORGANIZATION_CLASSIFICATION_CHOICES)
     founding_date = models.CharField(max_length=10, blank=True)     # YYYY[-MM[-DD]]
@@ -74,7 +71,6 @@ class Organization(OCDBase):
 
     class Meta:
         index_together = [
-            ['jurisdiction', 'classification', 'name'],
             ['classification', 'name'],
         ]
 
@@ -108,8 +104,6 @@ class Post(OCDBase):
     label = models.CharField(max_length=300)
     role = models.CharField(max_length=300, blank=True)
     organization = models.ForeignKey(Organization, related_name='posts')
-    division = models.ForeignKey(Division, related_name='posts', null=True, blank=True,
-                                 default=None)
     start_date = models.CharField(max_length=10, blank=True)    # YYYY[-MM[-DD]]
     end_date = models.CharField(max_length=10, blank=True)    # YYYY[-MM[-DD]]
 
