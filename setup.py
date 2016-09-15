@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
-setup(name="popolo-django",
+setup(name="django",
       version='0.8.2',
       author="Paul Tagliamonte",
       author_email='paultag@gmail.com',
@@ -9,15 +9,8 @@ setup(name="popolo-django",
       description="python popolo library",
       long_description="",
       url="",
-      py_modules=['popolo.apps', 'popolo.common'],
-      packages=['popolo.admin',
-                'popolo.management',
-                'popolo.management.commands',
-                'popolo.migrations',
-                'popolo.models',
-                'popolo.tests',
-                'popolo.templates',
-                ],
+      py_modules=['popolo'],
+      packages=[],
       include_package_data=True,
       install_requires=[
           'Django>=1.9',

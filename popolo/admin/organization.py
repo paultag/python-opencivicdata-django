@@ -49,16 +49,13 @@ class OrgMembershipInline(ReadOnlyTabularInline):
 
 @admin.register(models.Organization)
 class OrganizationAdmin(ModelAdmin):
-    readonly_fields = ('id', 'name', 'classification', 'parent',
-                       'jurisdiction', 'extras')
+    readonly_fields = ('id', 'name', 'classification', 'parent', 'extras')
     fields = readonly_fields + (
         ('founding_date', 'dissolution_date'),
         'image'
     )
     search_fields = ('name',)
-    list_filter = (
-        'jurisdiction__name',
-    )
+    list_filter = ()
 
     inlines = [
         OrganizationIdentifierInline,
@@ -79,20 +76,5 @@ class OrganizationAdmin(ModelAdmin):
     get_org_name.allow_tags = True
     get_org_name.admin_order_field = "name"
 
-    def get_jurisdiction(self, obj):
-        jurisdiction = obj.jurisdiction
-        if jurisdiction:
-            admin_url = urlresolvers.reverse('admin:opencivicdata_jurisdiction_change',
-                                             args=(jurisdiction.pk,))
-            tmpl = '<a href="%s">%s</a>'
-            return tmpl % (admin_url, jurisdiction.name)
-
-        return "(none)"
-
-    get_jurisdiction.short_description = 'Jurisdiction'
-    get_jurisdiction.allow_tags = True
-    get_jurisdiction.admin_order_field = 'jurisdiction__name'
-
-    list_select_related = ('jurisdiction',)
-    list_display = ('get_org_name', 'get_jurisdiction', 'classification')
+    list_display = ('get_org_name', 'classification')
     ordering = ('name',)
