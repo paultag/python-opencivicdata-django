@@ -11,17 +11,12 @@ class OCDIDField(models.CharField):
 
     def __init__(self, *args, **kwargs):
         self.ocd_type = kwargs.pop('ocd_type')
-        if self.ocd_type != 'jurisdiction':
-            kwargs['default'] = lambda: 'ocd-{}/{}'.format(self.ocd_type, uuid.uuid4())
-            # len('ocd-') + len(ocd_type) + len('/') + len(uuid)
-            #       = 4 + len(ocd_type) + 1 + 36
-            #       = len(ocd_type) + 41
-            kwargs['max_length'] = 41 + len(self.ocd_type)
-            regex = '^ocd-' + self.ocd_type + '/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
-        else:
-            kwargs['max_length'] = 300
-            regex = common.JURISDICTION_ID_REGEX
-
+        kwargs['default'] = lambda: 'ocd-{}/{}'.format(self.ocd_type, uuid.uuid4())
+        # len('ocd-') + len(ocd_type) + len('/') + len(uuid)
+        #       = 4 + len(ocd_type) + 1 + 36
+        #       = len(ocd_type) + 41
+        kwargs['max_length'] = 41 + len(self.ocd_type)
+        regex = '^ocd-' + self.ocd_type + '/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
         kwargs['primary_key'] = True
         # get pattern property if it exists, otherwise just return the object (hopefully a string)
         msg = 'ID must match ' + getattr(regex, 'pattern', regex)
@@ -30,8 +25,6 @@ class OCDIDField(models.CharField):
 
     def deconstruct(self):
         name, path, args, kwargs = super(OCDIDField, self).deconstruct()
-        if self.ocd_type != 'jurisdiction':
-            kwargs.pop('default')
         kwargs.pop('max_length')
         kwargs.pop('primary_key')
         kwargs['ocd_type'] = self.ocd_type
