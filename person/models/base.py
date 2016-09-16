@@ -19,7 +19,7 @@ class OCDBase(models.Model):
 
 
 class RelatedBase(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.IntegerField(primary_key=True, editable=False)
 
     class Meta:
         abstract = True

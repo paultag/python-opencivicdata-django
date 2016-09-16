@@ -36,7 +36,7 @@ class OtherNameBase(RelatedBase):
 
 
 class Person(OCDBase):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.IntegerField(primary_key=True, editable=False)
     name = models.CharField(max_length=300, db_index=True)
     sort_name = models.CharField(max_length=100, default='', blank=True)
     family_name = models.CharField(max_length=100, blank=True)
