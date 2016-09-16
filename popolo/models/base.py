@@ -7,30 +7,6 @@ from django.core.validators import RegexValidator
 from .. import common
 
 
-class OCDIDField(models.CharField):
-
-    def __init__(self, *args, **kwargs):
-        self.ocd_type = kwargs.pop('ocd_type')
-        kwargs['default'] = lambda: 'ocd-{}/{}'.format(self.ocd_type, uuid.uuid4())
-        # len('ocd-') + len(ocd_type) + len('/') + len(uuid)
-        #       = 4 + len(ocd_type) + 1 + 36
-        #       = len(ocd_type) + 41
-        kwargs['max_length'] = 41 + len(self.ocd_type)
-        regex = '^ocd-' + self.ocd_type + '/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
-        kwargs['primary_key'] = True
-        # get pattern property if it exists, otherwise just return the object (hopefully a string)
-        msg = 'ID must match ' + getattr(regex, 'pattern', regex)
-        kwargs['validators'] = [RegexValidator(regex=regex, message=msg, flags=re.U)]
-        super(OCDIDField, self).__init__(*args, **kwargs)
-
-    def deconstruct(self):
-        name, path, args, kwargs = super(OCDIDField, self).deconstruct()
-        kwargs.pop('max_length')
-        kwargs.pop('primary_key')
-        kwargs['ocd_type'] = self.ocd_type
-        return (name, path, args, kwargs)
-
-
 class OCDBase(models.Model):
     """ common base fields across all top-level models """
     created_at = models.DateTimeField(auto_now_add=True)

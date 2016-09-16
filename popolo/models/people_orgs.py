@@ -1,7 +1,7 @@
 import datetime
 from django.db import models, transaction
 from django.db.models import Q, QuerySet
-from .base import OCDBase, LinkBase, OCDIDField, RelatedBase, IdentifierBase
+from .base import OCDBase, LinkBase, RelatedBase, IdentifierBase
 from .. import common
 
 # abstract models
@@ -35,7 +35,6 @@ class OtherNameBase(RelatedBase):
 # the actual models
 
 class Organization(OCDBase):
-    id = OCDIDField(ocd_type='organization')
     name = models.CharField(max_length=300)
     image = models.URLField(blank=True, max_length=2000)
     parent = models.ForeignKey('self', related_name='children', null=True)
@@ -100,7 +99,6 @@ class OrganizationSource(LinkBase):
 
 
 class Post(OCDBase):
-    id = OCDIDField(ocd_type='post')
     label = models.CharField(max_length=300)
     role = models.CharField(max_length=300, blank=True)
     organization = models.ForeignKey(Organization, related_name='posts')
@@ -148,7 +146,6 @@ class PersonQuerySet(QuerySet):
 class Person(OCDBase):
     objects = PersonQuerySet.as_manager()
 
-    id = OCDIDField(ocd_type='person')
     name = models.CharField(max_length=300, db_index=True)
     sort_name = models.CharField(max_length=100, default='', blank=True)
     family_name = models.CharField(max_length=100, blank=True)
@@ -195,7 +192,6 @@ class PersonSource(LinkBase):
 
 
 class Membership(OCDBase):
-    id = OCDIDField(ocd_type='membership')
     organization = models.ForeignKey(Organization, related_name='memberships')
     person = models.ForeignKey(Person, related_name='memberships')
     post = models.ForeignKey(Post, related_name='memberships', null=True)
