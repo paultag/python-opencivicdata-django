@@ -54,32 +54,3 @@ class IdentifierBase(RelatedBase):
 
     def __str__(self):
         return self.identifier
-
-
-class RelatedEntityBase(RelatedBase):
-    name = models.CharField(max_length=2000)
-    entity_type = models.CharField(max_length=20, blank=True)
-
-    # optionally tied to an organization or person if it was linkable
-    organization = models.ForeignKey('Organization', null=True)
-    person = models.ForeignKey('Person', null=True)
-
-    @property
-    def entity_name(self):
-        if self.entity_type == 'organization' and self.organization_id:
-            return self.organization.name
-        elif self.entity_type == 'person' and self.person_id:
-            return self.person.name
-        else:
-            return self.name
-
-    @property
-    def entity_id(self):
-        if self.entity_type == 'organization':
-            return self.organization_id
-        if self.entity_type == 'person':
-            return self.person_id
-        return None
-
-    class Meta:
-        abstract = True

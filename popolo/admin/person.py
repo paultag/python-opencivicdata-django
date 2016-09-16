@@ -27,14 +27,6 @@ class PersonSourceInline(ReadOnlyTabularInline):
     model = models.PersonSource
 
 
-class MembershipInline(ReadOnlyTabularInline):
-    model = models.Membership
-    readonly_fields = ('id', 'organization', 'post', 'label', 'role', 'start_date',)
-    fields = readonly_fields + ('end_date',)
-    extra = 0
-    can_delete = False
-
-
 # TODO field locking
 @admin.register(models.Person)
 class PersonAdmin(ModelAdmin):
@@ -53,5 +45,4 @@ class PersonAdmin(ModelAdmin):
         PersonContactDetailInline,
         PersonLinkInline,
         PersonSourceInline,
-        MembershipInline
     ]
