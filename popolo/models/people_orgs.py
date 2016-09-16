@@ -4,6 +4,8 @@ from django.db.models import Q, QuerySet
 from .base import OCDBase, LinkBase, RelatedBase, IdentifierBase
 from .. import common
 
+import uuid
+
 # abstract models
 
 
@@ -35,6 +37,7 @@ class OtherNameBase(RelatedBase):
 # the actual models
 
 class Organization(OCDBase):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=300)
     image = models.URLField(blank=True, max_length=2000)
     parent = models.ForeignKey('self', related_name='children', null=True)
@@ -99,6 +102,7 @@ class OrganizationSource(LinkBase):
 
 
 class Post(OCDBase):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     label = models.CharField(max_length=300)
     role = models.CharField(max_length=300, blank=True)
     organization = models.ForeignKey(Organization, related_name='posts')
@@ -146,6 +150,7 @@ class PersonQuerySet(QuerySet):
 class Person(OCDBase):
     objects = PersonQuerySet.as_manager()
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=300, db_index=True)
     sort_name = models.CharField(max_length=100, default='', blank=True)
     family_name = models.CharField(max_length=100, blank=True)
@@ -192,6 +197,7 @@ class PersonSource(LinkBase):
 
 
 class Membership(OCDBase):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization = models.ForeignKey(Organization, related_name='memberships')
     person = models.ForeignKey(Person, related_name='memberships')
     post = models.ForeignKey(Post, related_name='memberships', null=True)
